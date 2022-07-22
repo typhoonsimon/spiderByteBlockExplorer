@@ -1,4 +1,4 @@
-# NewBull Block Explorer
+# SpiderByte Block Explorer
 
 [SpiderByte Block Explorer](https://github.com/typhoonsimon/spiderByteBlockExplorer) is a simple and lightweight block explorer written in PHP(no database required).
 
