@@ -1,13 +1,12 @@
 # NewBull Block Explorer
 
-[NewBull Block Explorer](https://github.com/newbull/newbull-block-explorer) is a simple and lightweight block explorer written in PHP(no database required) with `easybitcoin.php` ([get it here](https://github.com/aceat64/EasyBitcoin-PHP)).
+[SpiderByte Block Explorer](https://github.com/typhoonsimon/spiderByteBlockExplorer) is a simple and lightweight block explorer written in PHP(no database required).
 
-NewBull Block Explorer work with [NewBull Core](https://newbull.org) fine. It's should work with others pow block chain, such as Bitcoin.
+SpiderByte Block Explorer work with [SpiderByte](https://spiderbyte.co) fine. It's should work with others pow/pos/hybrid block chain, such as Bitcoin, Litecoin, etc.
 
 ## Requirements
 
--   Linux or Windows server of running NewBull Core
--   NewBull Core v0.14.2
+-   Linux or Windows server of running SpiderByte Wallet
 -   Apache 2.4.x
 -   PHP 5.6.x with CURL and JSON support enabled
 
@@ -55,7 +54,15 @@ LTC:
 
 MIT
 
-## Changelog
+## Changelog (from NewBull original)
+
+2.0.0 2022-07-22
+
+first release of SpiderByte explorer;
+
+make it work with hybrid pow/pos block generation;
+
+removed all warnings and notices that appear with PHP 7+;
 
 1.7.0 2021-11-27
 
