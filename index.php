@@ -1,5 +1,5 @@
 <?php
-$version = '1.7.0';
+$version = '2.0.0';
 define("IN_SCRIPT", true);
 
 require_once 'conf/config.php';
@@ -11,7 +11,7 @@ $bitcoinrpc = new Bitcoin($config["rpc_user"], $config["rpc_password"], $config[
 //init url path prefix
 if ($config["url_rewrite"]) {
     $name = isset($_GET['name']) ? $_GET['name'] : "";
-    list($url_param_get_action, $url_param_get_value) = explode("/", $name);
+    @list($url_param_get_action, $url_param_get_value) = explode("/", $name);
     $url_path["height"] = $config["root_path"] . $config["explorer_path"] . 'height/';
     $url_path["blockhash"] = $config["root_path"] . $config["explorer_path"] . 'blockhash/';
     $url_path["tx"] = $config["root_path"] . $config["explorer_path"] . 'tx/';
@@ -26,7 +26,7 @@ if ($config["url_rewrite"]) {
     $url_path["block"] = $config["root_path"] . $config["explorer_path"] . '?action=block&v=';
     $url_path["search"] = $config["root_path"] . $config["explorer_path"] . '?action=search&v=';
 }
-
+$output = array();
 switch ($url_param_get_action) {
     case "":
         $getrawmempool = $bitcoinrpc->getrawmempool();
@@ -51,7 +51,8 @@ switch ($url_param_get_action) {
             $output['transactions'][] = $transaction_detail;
         }
 
-        if (count($output['transactions']) > 0) {
+        if (isset($output['transactions'])) {
+            $output['memory_pool_list_tbody'] = "";
             foreach ($output['transactions'] as $value) {
                 $output['memory_pool_list_tbody'] .= '<tr><td class="text-start">';
                 $output['memory_pool_list_tbody'] .= '<a class="text-info" href="' . $url_path["tx"] . $value["tx"] . '">' . $value["tx"] . '</a>';
@@ -86,8 +87,9 @@ switch ($url_param_get_action) {
         if ($config["proofof"] === "pow") {
             $output['difficulty'] = short_number($info['difficulty'], 1000, 3, "");
         } else {
-            $output['difficulty'] = $info['difficulty']['proof-of-work'];
-            $output['difficulty_pos'] = $info['difficulty']['proof-of-stake'];
+            $difficulty = $bitcoinrpc->getdifficulty();
+            $output['difficulty'] = $difficulty['proof-of-work'];
+            $output['difficulty_pos'] = $difficulty['proof-of-stake'];
         }
 
         $mininginfo = $bitcoinrpc->getmininginfo();
@@ -102,7 +104,7 @@ switch ($url_param_get_action) {
             }
         }
         $output['hashrate'] = short_number($hashrate, 1000, 3, " ") . "H/s";
-        $output['chain'] = $mininginfo['chain'];
+        $output['chain'] = isset($mininginfo['chain']) ? $mininginfo['chain'] : "";
         $nTarget = $config["nTargetTimespan"] / $config["nTargetSpacing"];
         $output['nextdiff_blocks'] = $nTarget - ($info['blocks'] - $config["retarget_diff_since"]) % $nTarget;
         $output['nextdiff_timeline'] = gmdate($config["date_format"], time() + $output['nextdiff_blocks'] * $config["nTargetSpacing"]);
@@ -151,6 +153,7 @@ switch ($url_param_get_action) {
         // echo json_encode($output);
 
         if (count($output['blocks']) > 0) {
+            $output['block_list_tbody'] = "";
             foreach ($output['blocks'] as $value) {
                 $output['block_list_tbody'] .= "<tr><td><a class=\"text-info\" href=\"" . $url_path["block"] . $value["height"] . "\">" . $value["height"] . "</a></td><td><a class=\"text-info\" href=\"" . $url_path["blockhash"] . $value["hash"] . "\">" . $value["hash"] . "</a></td><td>" . $value["difficulty"] . "</td><td>" . $value["date"] . "</td><td>" . $value["tx_count"] . "</td><td>" . $value["value_out"] . "</td><td>" . $value["size"] . "</td></tr>";
             }
@@ -176,11 +179,11 @@ switch ($url_param_get_action) {
             $output["older_page_display"] = ' style="display: none;"';
         }
 
-        if (!$output['memory_pool_list_tbody']) {
+        if (!isset($output['memory_pool_list_tbody'])) {
             $output["memory_pool_list_tbody"] = "";
             $output["memory_pool_list_tbody_display"] = ' style="display: none;"';
         }
-        if (!$output['get_nextdiff_url']) {
+        if (!isset($output['get_nextdiff_url'])) {
             $output["get_nextdiff_url"] = "";
             $output["nextdiff_display"] = ' style="display: none;"';
         }
@@ -246,13 +249,13 @@ switch ($url_param_get_action) {
             exit('failed to connect - node not reachable, or user/pass incorrect');
         }
 
-        $output['transaction_detail_tbody'] .= "<tr><th class=\"text-end\" style=\"width:30%\">txid</th><td class=\"text-start\">" . $rawtransaction["txid"] . "</td></tr>";
+        $output['transaction_detail_tbody'] = "<tr><th class=\"text-end\" style=\"width:30%\">txid</th><td class=\"text-start\">" . $rawtransaction["txid"] . "</td></tr>";
         $output['transaction_detail_tbody'] .= "<tr><th class=\"text-end\">Block Hash</th><td class=\"text-start\">" . '<a class="text-info" href="' . $url_path["blockhash"] . $rawtransaction["blockhash"] . '">' . $rawtransaction["blockhash"] . "</a></td></tr>";
         $output['transaction_detail_tbody'] .= "<tr><th class=\"text-end\">Time</th><td class=\"text-start\">" . gmdate($config["date_format"], $rawtransaction["time"]) . " UTC</td></tr>";
         $output['transaction_detail_tbody'] .= "<tr><th class=\"text-end\">Version</th><td class=\"text-start\">" . $rawtransaction["version"] . "</td></tr>";
         $output['transaction_detail_tbody'] .= "<tr><th class=\"text-end\">Confirmations</th><td class=\"text-start\">" . $rawtransaction["confirmations"] . "</td></tr>";
 
-        $output['tx_list_tbody'] .= '<tr class="text-start">';
+        $output['tx_list_tbody'] = '<tr class="text-start">';
         $output['tx_list_tbody'] .= '<td>';
         if (count($rawtransaction['vin']) > 0) {
             foreach ($rawtransaction['vin'] as $key => $vin) {
@@ -444,21 +447,29 @@ switch ($url_param_get_action) {
 function get_output_from_block($block)
 {
     global $config, $url_path, $bitcoinrpc;
-    $output['block_detail_tbody'] .= "<tr><th class=\"text-end\" style=\"width:30%\">Height</th><td class=\"text-start\">" . $block["height"] . "</td></tr>";
+
+    $blockType = "PoS";
+    if ($block["flags"] == "proof-of-work") {
+        $blockType = "PoW";
+    }
+
+    $output = array();
+    $output['block_detail_tbody'] = "<tr><th class=\"text-end\" style=\"width:30%\">Height</th><td class=\"text-start\">" . $block["height"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Hash</th><td class=\"text-start\">" . $block["hash"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Time</th><td class=\"text-start\">" . gmdate($config["date_format"], $block["time"]) . " UTC</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Version</th><td class=\"text-start\">" . $block["version"] . "</td></tr>";
-    $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Version Hex</th><td class=\"text-start\">" . $block["versionHex"] . "</td></tr>";
-    $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Weight</th><td class=\"text-start\">" . short_number($block["weight"], 1024, 3, " ") . "B" . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Size</th><td class=\"text-start\">" . short_number($block["size"], 1024, 3, " ") . "B" . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Confirmations</th><td class=\"text-start\">" . $block["confirmations"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Difficulty</th><td class=\"text-start\">" . $block["difficulty"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Bits</th><td class=\"text-start\">" . $block["bits"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Nonce</th><td class=\"text-start\">" . $block["nonce"] . "</td></tr>";
-    $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Chainwork</th><td class=\"text-start\">" . $block["chainwork"] . "</td></tr>";
+    $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Block type</th><td class=\"text-start\">" . $blockType . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Merkleroot</th><td class=\"text-start\">" . $block["merkleroot"] . "</td></tr>";
+    //$output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Signature</th><td class=\"text-start\">" . $block["signature"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Previous block</th><td class=\"text-start\">" . ($block["previousblockhash"] ? "<a class=\"text-info\" href=\"" . $url_path["blockhash"] . $block["previousblockhash"] . "\">" . $block["previousblockhash"] . "</a>" : "") . "</td></tr>";
-    $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Next block</th><td class=\"text-start\">" . ($block["nextblockhash"] ? "<a class=\"text-info\" href=\"" . $url_path["blockhash"] . $block["nextblockhash"] . "\">" . $block["nextblockhash"] . "</a>" : "") . "</td></tr>";
+    if (isset($block["nextblockhash"])) {
+        $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Next block</th><td class=\"text-start\">" . ($block["nextblockhash"] ? "<a class=\"text-info\" href=\"" . $url_path["blockhash"] . $block["nextblockhash"] . "\">" . $block["nextblockhash"] . "</a>" : "") . "</td></tr>";
+    }
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Transactions</th><td class=\"text-start\">" . count($block["tx"]) . "</td></tr>";
 
     if (count($block["tx"]) > 0) {
@@ -491,26 +502,52 @@ function get_output_from_block($block)
     // echo json_encode($output);
     // exit;
 
+
+    //var_dump($output['transactions']);
+
     if (count($output['transactions']) > 0) {
-        foreach ($output['transactions'] as $value) {
+        $stsPos = 4;
+        $isMint = false;
+
+       foreach ($output['transactions'] as $value) {
+            if ($value["coinbase"] && $blockType == "PoS") {
+                $stsPos = 1;
+                $isMint = true;
+            }
+            //if (isset($value["vout"])) {
             $output['block_detail_tbody'] .= '<tr><th class="text-end">tx</th><td class="text-start">';
             $output['block_detail_tbody'] .= '<a class="text-info" href="' . $url_path["tx"] . $value["tx"] . '">' . $value["tx"] . '</a>';
             $output['block_detail_tbody'] .= '</td></tr>';
             $output['block_detail_tbody'] .= '<tr><th class="text-end"></th><td class="text-start">';
             $output['block_detail_tbody'] .= '<table class="table table-borderless text-white-50 table-sm w-75"><tbody>';
-            if ($value["coinbase"]) {
+            if ((($value["coinbase"]) && !$isMint) ||
+                ($isMint && ($stsPos == 2))) {
                 $reward = " <span class=\"text-muted\">*</span>";
             } else {
                 $reward = "";
             }
-            foreach ($value["vout"] as $vout) {
-                $output['block_detail_tbody'] .= '<tr><td class="text-start">' . $reward . $vout["value"] . ' ' . $config["symbol"] . '</td><td class="text-start">';
-                foreach ($vout["addresses"] as $address) {
-                    $output['block_detail_tbody'] .= $address . '<br>';
-                }
-                $output['block_detail_tbody'] .= '</td></tr>';
+            //$amount = $vout["value"];
+            if ($stsPos == 1) {		// first TX is zero
+                $amount = 0;
+                $stsPos = 2;
+		$value["vout"][0]["value"] = 0;
+		$value["vout"][0]["addresses"][0] = "none";
+            } else if ($stsPos == 2) {	// print the PoS amount
+                $amount = $block["mint"];
+                $stsPos = 3;
+            } else {
+                $stsPos = 4;
             }
-            $output['block_detail_tbody'] .= '</tbody></table>';
+
+                foreach ($value["vout"] as $vout) {
+                    $output['block_detail_tbody'] .= '<tr><td class="text-start" width="30%">' . $reward . ($stsPos < 4 ? $amount : $vout["value"]) . ' ' . $config["symbol"] . '</td><td class="text-start">';
+                    foreach ($vout["addresses"] as $address) {
+                        $output['block_detail_tbody'] .= $address . '<br>';
+                    }
+                    $output['block_detail_tbody'] .= '</td></tr>';
+                }
+                $output['block_detail_tbody'] .= '</tbody></table>';
+            //}
         }
     }
 
@@ -558,7 +595,7 @@ function html_replace($html, $output)
     foreach ($output as $key => $value) {
         $keys[] = '{$' . $key . '}';
     }
-    return str_replace(
+    return @str_replace(
         $keys,
         array_values($output),
         $html);
