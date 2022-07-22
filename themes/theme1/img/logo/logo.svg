@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="80.498" height="92.292" viewBox="0 0 80.498 92.292">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#4cc9f0"/>
+      <stop offset="0.5" stop-color="#4361ee"/>
+      <stop offset="1" stop-color="#3a0ca3"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f72585"/>
+      <stop offset="0.5" stop-color="#3c1eb3"/>
+      <stop offset="1" stop-color="#4361ee"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="-0.177" y1="0.828" x2="1.276" y2="0.173" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="0.25" stop-color="#fcfdff"/>
+      <stop offset="0.4" stop-color="#f4f6fe"/>
+      <stop offset="0.52" stop-color="#e6eafd"/>
+      <stop offset="0.63" stop-color="#d1d9fb"/>
+      <stop offset="0.73" stop-color="#b7c3f9"/>
+      <stop offset="0.83" stop-color="#97a7f6"/>
+      <stop offset="0.91" stop-color="#7188f2"/>
+      <stop offset="1" stop-color="#4663ee"/>
+      <stop offset="1" stop-color="#4361ee"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-4" x1="1.174" y1="0.827" x2="-0.279" y2="0.172" xlink:href="#linear-gradient-3"/>
+    <linearGradient id="linear-gradient-5" x1="-0.127" y1="0.841" x2="1.22" y2="0.159" xlink:href="#linear-gradient-3"/>
+    <linearGradient id="linear-gradient-6" x1="1.127" y1="0.84" x2="-0.219" y2="0.159" xlink:href="#linear-gradient-3"/>
+  </defs>
+  <g id="logo" transform="translate(0 0.004)">
+    <g id="Livello_1" data-name="Livello 1" transform="translate(0 -0.004)">
+      <path id="Tracciato_1" data-name="Tracciato 1" d="M87.491,46.408V81.364a1.42,1.42,0,0,1-.71,1.232L77.4,88.023,73.8,90.1l-3.582,2.069-3.6,2.077L56.528,100.07a1.42,1.42,0,0,1-1.42,0l-10.1-5.825-3.6-2.077-3.6-2.08-3.61-2.066L24.82,82.6a1.42,1.42,0,0,1-.71-1.232V46.408a1.42,1.42,0,0,1,.71-1.228l9.385-5.431L37.8,37.676l3.635-2.1,3.6-2.08,10.06-5.8a1.42,1.42,0,0,1,1.42,0l10.06,5.8,3.6,2.08,3.635,2.1L77.4,39.749l9.385,5.431A1.42,1.42,0,0,1,87.491,46.408Z" transform="translate(-15.552 -17.74)" fill="url(#linear-gradient)"/>
+      <path id="Tracciato_2" data-name="Tracciato 2" d="M79.433,22.289,54.618,7.963v4.92L75.528,24.951a1.42,1.42,0,0,1,.71,1.228V66.1a1.42,1.42,0,0,1-.71,1.232L40.959,87.289a1.42,1.42,0,0,1-1.42,0L4.969,67.333A1.42,1.42,0,0,1,4.26,66.1V26.183a1.42,1.42,0,0,1,.71-1.228L25.88,12.886V7.963L1.065,22.289A2.13,2.13,0,0,0,0,24.135V68.15A2.13,2.13,0,0,0,1.065,70L39.184,92a2.13,2.13,0,0,0,2.13,0L79.433,70A2.13,2.13,0,0,0,80.5,68.15V24.135a2.13,2.13,0,0,0-1.065-1.846ZM51.018,10.8V5.883l-9.7-5.6a2.13,2.13,0,0,0-2.13,0l-9.7,5.6V10.8L39.539,5a1.42,1.42,0,0,1,1.42,0Z" transform="translate(0 0.004)" fill="url(#linear-gradient-2)"/>
+      <path id="Tracciato_3" data-name="Tracciato 3" d="M82.433,155.445,76.459,161.4V174.78l-3.6-2.077V160.634a1.8,1.8,0,0,1,.529-1.274l6.517-6.482a1.8,1.8,0,0,1,2.538,2.552Z" transform="translate(-46.998 -98.274)" fill="url(#linear-gradient-3)"/>
+      <path id="Tracciato_4" data-name="Tracciato 4" d="M135.62,160.674v12.069l-3.6,2.077V161.438l-5.985-5.967a1.8,1.8,0,0,1,2.538-2.552l6.517,6.482a1.8,1.8,0,0,1,.529,1.274Z" transform="translate(-80.956 -98.3)" fill="url(#linear-gradient-4)"/>
+      <path id="Tracciato_5" data-name="Tracciato 5" d="M63.06,145.4l-6.911,6.868v11.88l-3.6-2.066V151.517a1.8,1.8,0,0,1,.515-1.274l7.454-7.4A1.8,1.8,0,1,1,63.06,145.4Z" transform="translate(-33.897 -91.797)" fill="url(#linear-gradient-5)"/>
+      <path id="Tracciato_6" data-name="Tracciato 6" d="M154.166,151.53v10.564l-3.6,2.077V152.279l-6.911-6.868a1.8,1.8,0,1,1,2.538-2.552l7.454,7.4a1.8,1.8,0,0,1,.518,1.267Z" transform="translate(-92.321 -91.811)" fill="url(#linear-gradient-6)"/>
+      <path id="Tracciato_7" data-name="Tracciato 7" d="M147.329,18.66v4.92l-3.6-2.08V16.58Z" transform="translate(-92.712 -10.693)" fill="#fff"/>
+      <path id="Tracciato_8" data-name="Tracciato 8" d="M76.509,16.58V21.5l-3.6,2.08V18.66Z" transform="translate(-47.03 -10.693)" fill="#fff"/>
+      <path id="Tracciato_9" data-name="Tracciato 9" d="M92.149,48.6v9.957l-6.567,6.492-11.43,6.521-8.973-5.115,8.966-5.119,5.541,3.17c.028.018.057.025.082.039a2.006,2.006,0,0,0,.238.1h.039a1.849,1.849,0,0,0,.554.092,1.8,1.8,0,0,0,1.285-.54l6.109-6.233a1.8,1.8,0,0,0,.515-1.26V46.5l-3.6-2.08V55.985L80.294,60.7l-5.257-3a1.793,1.793,0,0,0-1.775,0L68,60.7l-4.622-4.714V44.42l-3.6,2.08V56.716a1.8,1.8,0,0,0,.515,1.26l4.487,4.568L61.871,64.2l-5.722-5.647V48.6l-3.6,2.062v8.647a1.8,1.8,0,0,0,.536,1.292l7.021,6.939a1.775,1.775,0,0,0,.55.486l11.689,6.67V84.928l-8.988-5.143V73.64a1.8,1.8,0,1,0-3.6,0v7.191a1.8,1.8,0,0,0,.909,1.562L73.24,89.571h0c.067.035.135.071.2.1a1.927,1.927,0,0,0,.355.1h.1a2.06,2.06,0,0,0,.256.018,1.807,1.807,0,0,0,.891-.234l12.6-7.191a1.8,1.8,0,0,0,.923-1.53V67.173L95.205,60.6a1.8,1.8,0,0,0,.536-1.281V50.66Z" transform="translate(-33.897 -28.651)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
