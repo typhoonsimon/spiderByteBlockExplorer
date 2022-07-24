@@ -526,28 +526,29 @@ function get_output_from_block($block)
             } else {
                 $reward = "";
             }
-            //$amount = $vout["value"];
-            if ($stsPos == 1) {		// first TX is zero
+            if ($stsPos == 1) {				// first TX is zero
                 $amount = 0;
                 $stsPos = 2;
-		$value["vout"][0]["value"] = 0;
-		$value["vout"][0]["addresses"][0] = "none";
-            } else if ($stsPos == 2) {	// print the PoS amount
-                $amount = $block["mint"];
+				$value["vout"][0]["value"] = 0;
+				$value["vout"][0]["addresses"][0] = "none";
+            } else if ($stsPos == 2) {		// print the PoS amount
+                foreach ($value["vout"] as $k => $vout) {
+					$value["vout"][$k]["value"] = $block["mint"];
+					break;
+				}
+				$value["vout"] = array_slice($value["vout"], 0, 1, true);
                 $stsPos = 3;
             } else {
                 $stsPos = 4;
             }
-
-                foreach ($value["vout"] as $vout) {
-                    $output['block_detail_tbody'] .= '<tr><td class="text-start" width="30%">' . $reward . ($stsPos < 4 ? $amount : $vout["value"]) . ' ' . $config["symbol"] . '</td><td class="text-start">';
-                    foreach ($vout["addresses"] as $address) {
-                        $output['block_detail_tbody'] .= $address . '<br>';
-                    }
-                    $output['block_detail_tbody'] .= '</td></tr>';
+            foreach ($value["vout"] as $vout) {
+                $output['block_detail_tbody'] .= '<tr><td class="text-start" width="30%">' . $reward . $vout["value"] . ' ' . $config["symbol"] . '</td><td class="text-start">';
+                foreach ($vout["addresses"] as $address) {
+                    $output['block_detail_tbody'] .= $address . '<br>';
                 }
-                $output['block_detail_tbody'] .= '</tbody></table>';
-            //}
+                $output['block_detail_tbody'] .= '</td></tr>';
+            }
+            $output['block_detail_tbody'] .= '</tbody></table>';
         }
     }
 
