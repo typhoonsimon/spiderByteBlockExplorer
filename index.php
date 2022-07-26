@@ -82,7 +82,8 @@ switch ($url_param_get_action) {
             exit($bitcoinrpc->error);
         }
         $output['blockcount'] = $info['blocks'];
-        $output['blockcount_url'] = "<a class=\"btn3\" href=\"" . $url_path["height"] . $info['blocks'] . "\">" . $info['blocks'] . "</a>";
+        $output['blockcount_url'] = "<a class=\"btn3\" href=\"" . $url_path["height"] . $info['blocks'] . "\">" . number_format($info['blocks']) . "</a>";
+        $output['supply'] = number_format(round($info['moneysupply'], 0)) . " {$config["symbol"]}";
         $output['connections'] = $info['connections'];
         if ($config["proofof"] === "pow") {
             $output['difficulty'] = short_number($info['difficulty'], 1000, 3, "");
@@ -105,6 +106,7 @@ switch ($url_param_get_action) {
         }
         $output['hashrate'] = short_number($hashrate, 1000, 3, " ") . "H/s";
         $output['chain'] = isset($mininginfo['chain']) ? $mininginfo['chain'] : "";
+        $output['rules'] = $info["rules"];
         $nTarget = $config["nTargetTimespan"] / $config["nTargetSpacing"];
         $output['nextdiff_blocks'] = $nTarget - ($info['blocks'] - $config["retarget_diff_since"]) % $nTarget;
         $output['nextdiff_timeline'] = gmdate($config["date_format"], time() + $output['nextdiff_blocks'] * $config["nTargetSpacing"]);
