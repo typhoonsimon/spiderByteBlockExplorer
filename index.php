@@ -6,6 +6,9 @@ require_once 'conf/config.php';
 require_once 'libs/functions.php';
 require_once 'libs/easybitcoin.php';
 
+ini_set("date.timezone", "Asia/Shanghai");
+error_reporting(E_ALL ^ E_NOTICE ^ E_STRICT);
+
 $bitcoinrpc = new Bitcoin($config["rpc_user"], $config["rpc_password"], $config["rpc_host"], $config["rpc_port"]);
 
 //init url path prefix
@@ -451,11 +454,12 @@ function get_output_from_block($block)
     global $config, $url_path, $bitcoinrpc;
 
     $blockType = "PoS";
-    if ($block["flags"] == "proof-of-work") {
+    if (($block["flags"] == "proof-of-work") || ($block["flags"] == "proof-of-work stake-modifier")) {
         $blockType = "PoW";
     }
 
     $output = array();
+
     $output['block_detail_tbody'] = "<tr><th class=\"text-end\" style=\"width:30%\">Height</th><td class=\"text-start\">" . $block["height"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Hash</th><td class=\"text-start\">" . $block["hash"] . "</td></tr>";
     $output['block_detail_tbody'] .= "<tr><th class=\"text-end\">Time</th><td class=\"text-start\">" . gmdate($config["date_format"], $block["time"]) . " UTC</td></tr>";
@@ -531,17 +535,21 @@ function get_output_from_block($block)
             if ($stsPos == 1) {				// first TX is zero
                 $amount = 0;
                 $stsPos = 2;
-				$value["vout"][0]["value"] = 0;
-				$value["vout"][0]["addresses"][0] = "none";
+		$value["vout"][0]["value"] = 0;
+		$value["vout"][0]["addresses"][0] = "none";
             } else if ($stsPos == 2) {		// print the PoS amount
                 foreach ($value["vout"] as $k => $vout) {
-					$value["vout"][$k]["value"] = $block["mint"];
-					break;
-				}
-				$value["vout"] = array_slice($value["vout"], 0, 1, true);
+			$value["vout"][$k]["value"] = $block["mint"];
+			break;
+		}
+		$value["vout"] = array_slice($value["vout"], 0, 1, true);
                 $stsPos = 3;
             } else {
-                $stsPos = 4;
+            	if (!@is_array($value["vout"])) {
+			$value["vout"][0]["value"] = 0;
+			$value["vout"][0]["addresses"][0] = "none";
+		        $stsPos = 4;
+	        }
             }
             foreach ($value["vout"] as $vout) {
                 $output['block_detail_tbody'] .= '<tr><td class="text-start" width="30%">' . $reward . $vout["value"] . ' ' . $config["symbol"] . '</td><td class="text-start">';
